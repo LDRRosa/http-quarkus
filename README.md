@@ -121,14 +121,3 @@ O resultado evidencia que o item não está mais presente na coleção.
 <p align="center">
   <img src="img-comprovações/get dpois de deletar.png" width="700"/>
 </p>
-
----
-
-### 📌 Considerações
-
-As evidências apresentadas comprovam o correto funcionamento dos endpoints REST implementados, incluindo operações de criação, consulta e remoção de mensagens. A API segue o padrão de comunicação HTTP e responde adequadamente aos diferentes tipos de requisições.
-
-
-### Considerações
-
-A aplicação demonstra, de forma simplificada, como sistemas distribuídos podem se comunicar utilizando protocolos padronizados como o HTTP. Apesar de utilizar armazenamento em memória, a arquitetura adotada permite fácil evolução para cenários mais complexos, como integração com filas de mensagens (RabbitMQ, Kafka) ou bancos de dados persistentes.
