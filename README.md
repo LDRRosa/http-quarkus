@@ -1,66 +1,67 @@
-# http-quarkus
+## 4. Relatório
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+### 4.1 Arquitetura da Solução
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+A aplicação foi desenvolvida utilizando o framework Quarkus, seguindo o padrão arquitetural em camadas (Controller, Service e Repository), com o objetivo de simular a troca de mensagens entre processos distribuídos por meio de uma API REST.
 
-## Running the application in dev mode
+#### Fluxo de uma requisição POST /mensagens
 
-You can run your application in dev mode that enables live coding using:
+O fluxo de envio de uma mensagem ocorre da seguinte forma:
 
-```shell script
-./mvnw quarkus:dev
-```
+1. O cliente (Sender), que pode ser uma ferramenta como Postman ou outro sistema, realiza uma requisição HTTP do tipo POST para o endpoint `/mensagens`.
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+2. Essa requisição utiliza o protocolo HTTP para encapsular os dados da mensagem no corpo (body) da requisição, geralmente no formato JSON. 
 
-## Packaging and running the application
+3. O servidor, implementado com Quarkus (Receiver), recebe essa requisição através da classe Controller, que está mapeada com a anotação `@Path("/mensagens")` e o método anotado com `@POST`.
 
-The application can be packaged using:
+4. O Controller delega o processamento da requisição para a camada de Service, responsável pelas regras de negócio, como a atribuição de timestamp e validações.
 
-```shell script
-./mvnw package
-```
+5. A camada Service, por sua vez, utiliza o Repository para persistir a mensagem em uma estrutura de dados em memória (lista).
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+6. Após o processamento, o servidor retorna uma resposta HTTP ao cliente, contendo o status `201 Created` e o objeto da mensagem criada.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+Esse fluxo simula a comunicação entre processos distribuídos, onde o cliente atua como emissor da mensagem e o servidor como receptor.
 
-If you want to build an _über-jar_, execute the following command:
+---
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+#### Sender e Receiver
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+* **Sender (Remetente):** é o cliente que inicia a comunicação. Pode ser o Postman, um frontend ou outro serviço. Ele envia requisições HTTP contendo os dados da mensagem.
 
-## Creating a native executable
+* **Receiver (Receptor):** é a aplicação desenvolvida com Quarkus, responsável por receber, processar e armazenar as mensagens.
 
-You can create a native executable using:
+---
 
-```shell script
-./mvnw package -Dnative
-```
+#### Encapsulamento via protocolo HTTP
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+O protocolo HTTP é responsável por transportar a mensagem entre o cliente e o servidor. Ele encapsula as informações em uma estrutura composta por:
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+* Método HTTP (POST, GET, DELETE)
+* Cabeçalhos (headers), como `Content-Type: application/json`
+* Corpo da requisição (body), contendo os dados da mensagem em formato JSON
 
-You can then execute your native executable with: `./target/http-quarkus-1.0.0-SNAPSHOT-runner`
+Dessa forma, o HTTP atua como um meio de comunicação padronizado entre sistemas distribuídos.
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+---
 
-## Related Guides
+### Mapeamento Teórico: Send e Receive
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
+Os métodos HTTP utilizados na aplicação podem ser associados aos conceitos de envio (Send) e recebimento (Receive) estudados em sistemas distribuídos:
 
-## Provided Code
+* **POST /mensagens (Send):**
+  Representa o envio de uma mensagem do cliente para o servidor. O cliente atua como emissor (Sender), transmitindo dados que serão recebidos e processados pelo servidor.
 
-### REST
+* **GET /mensagens (Receive):**
+  Representa a recuperação das mensagens armazenadas. O cliente solicita ao servidor as mensagens já recebidas, funcionando como um consumidor dessas informações.
 
-Easily start your REST Web Services
+* **GET /mensagens/{id} (Receive específico):**
+  Permite acessar uma mensagem específica, funcionando como uma operação de leitura direcionada.
 
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+* **DELETE /mensagens/{id}:**
+  Representa a remoção de uma mensagem, simulando a exclusão de dados após processamento ou consumo, o que pode estar relacionado ao ciclo de vida de mensagens em sistemas distribuídos.
+
+---
+
+### Considerações
+
+A aplicação demonstra, de forma simplificada, como sistemas distribuídos podem se comunicar utilizando protocolos padronizados como o HTTP. Apesar de utilizar armazenamento em memória, a arquitetura adotada permite fácil evolução para cenários mais complexos, como integração com filas de mensagens (RabbitMQ, Kafka) ou bancos de dados persistentes.
