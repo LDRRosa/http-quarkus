@@ -62,6 +62,73 @@ Os métodos HTTP utilizados na aplicação podem ser associados aos conceitos de
 
 ---
 
+
+## 📸 Evidências de Funcionamento da API
+
+A seguir são apresentadas evidências do funcionamento dos principais endpoints da API desenvolvida. Os testes foram realizados utilizando ferramenta de requisições HTTP (como Postman), demonstrando o comportamento esperado de cada operação.
+
+---
+
+### 🔹 Criação de Mensagem (POST /mensagens)
+
+Esta imagem demonstra o envio de uma nova mensagem para a API.
+O cliente envia um payload JSON contendo o remetente e o conteúdo, e o sistema retorna a mensagem criada com ID e timestamp.
+
+<p align="center">
+  <img src="img-comprovações/post.png" width="700"/>
+</p>
+
+---
+
+### 🔹 Listagem de Mensagens (GET /mensagens)
+
+Nesta etapa é exibida a recuperação de todas as mensagens armazenadas em memória.
+A resposta retorna uma lista contendo todas as mensagens previamente enviadas.
+
+<p align="center">
+  <img src="img-comprovações/get.png" width="700"/>
+</p>
+
+---
+
+### 🔹 Busca por ID (GET /mensagens/{id})
+
+Aqui é possível observar a consulta de uma mensagem específica a partir do seu identificador único.
+A API retorna os dados da mensagem correspondente ao ID informado.
+
+<p align="center">
+  <img src="img-comprovações/getById.png" width="700"/>
+</p>
+
+---
+
+### 🔹 Remoção de Mensagem (DELETE /mensagens/{id})
+
+Esta imagem demonstra a exclusão de uma mensagem do sistema.
+Após a requisição, a API retorna um status indicando sucesso na operação.
+
+<p align="center">
+  <img src="img-comprovações/delete.png" width="700"/>
+</p>
+
+---
+
+### 🔹 Validação após Exclusão (GET após DELETE)
+
+Após a remoção, é realizada uma nova requisição de listagem para confirmar que a mensagem foi efetivamente removida.
+O resultado evidencia que o item não está mais presente na coleção.
+
+<p align="center">
+  <img src="img-comprovações/get dpois de deletar.png" width="700"/>
+</p>
+
+---
+
+### 📌 Considerações
+
+As evidências apresentadas comprovam o correto funcionamento dos endpoints REST implementados, incluindo operações de criação, consulta e remoção de mensagens. A API segue o padrão de comunicação HTTP e responde adequadamente aos diferentes tipos de requisições.
+
+
 ### Considerações
 
 A aplicação demonstra, de forma simplificada, como sistemas distribuídos podem se comunicar utilizando protocolos padronizados como o HTTP. Apesar de utilizar armazenamento em memória, a arquitetura adotada permite fácil evolução para cenários mais complexos, como integração com filas de mensagens (RabbitMQ, Kafka) ou bancos de dados persistentes.
